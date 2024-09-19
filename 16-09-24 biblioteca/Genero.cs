@@ -8,19 +8,19 @@ namespace _16_09_24_biblioteca
 {
     internal class Genero
     {
-        private int _id_genero;
+        private int _id_Genero;
         private string _nombreGenero;
 
-        public Genero(int _id_genero, string _genero)
+        public Genero(int _id_Genero, string _genero)
         {
-            this._id_genero = _id_genero;
+            this._id_Genero = _id_Genero;
             this._nombreGenero = _genero;
         }
 
-        public int Id_genero
+        public int Id_Genero
         {
-            get { return this._id_genero; }
-            set { this._id_genero = value; }
+            get { return this._id_Genero; }
+            set { this._id_Genero = value; }
         }
 
         public string NombreGenero
@@ -31,7 +31,7 @@ namespace _16_09_24_biblioteca
 
         public void MostrarDatosGenero()
         {
-            Console.WriteLine($"Id: {this.Id_genero} | Genero: {this.NombreGenero}");
+            Console.WriteLine($"Id: {this.Id_Genero} | Genero: {this.NombreGenero}");
         }
     }
 }

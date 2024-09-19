@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace _16_09_24_biblioteca
 {
@@ -14,13 +15,13 @@ namespace _16_09_24_biblioteca
         private int _id_genero;
         private int _id_autor;
         private int _anio;
-        private string _ubicacion;
+        private int _ubicacion;
         private char _estado;
         private List<Autor> ListaAutores;
-        private string _nombreAutor;
+        private List<Genero> ListaGeneros;
 
 
-        public Libro(int _id_libro, string _titulo, int _id_genero, int _id_autor, int _anio, string _ubicacion, char _estado)
+        public Libro(int _id_libro, string _titulo, int _id_genero, int _id_autor, int _anio, int _ubicacion, char _estado)
         {
             this._id_libro = _id_libro;
             this._titulo = _titulo;
@@ -30,6 +31,7 @@ namespace _16_09_24_biblioteca
             this._ubicacion = _ubicacion;
             this._estado = _estado;
             this.ListaAutores = new List<Autor>();
+            this.ListaGeneros = new List<Genero>();
         }
 
         public int Id_libro
@@ -62,7 +64,7 @@ namespace _16_09_24_biblioteca
             set { this._anio = value; }
         }
 
-        public string Ubicacion
+        public int Ubicacion
         {
             get { return this._ubicacion; }
             set { this._ubicacion = value; }
@@ -74,12 +76,35 @@ namespace _16_09_24_biblioteca
             set { this._estado = value; }
         }
 
-        public void CambioDeEstado(char estado)
+        public void CambioDeEstado()
         {
-            this.Estado = estado;
+            char opcion;
+            Console.Write($"El estado actual del libro es {this.Estado}, ¿Desea cambiarlo? s/n: ");
+            while(!(char.TryParse(Console.ReadLine().ToLower(), out opcion) && (opcion == 's' || opcion == 'n')))
+            {
+                Console.WriteLine("Error en la elección. Inténtelo nuevamente\n");
+                Console.Write($"El estado actual del libro es {this.Estado}, ¿Desea cambiarlo? s/n: ");
+            }
+            switch (opcion)
+            {
+                case 's':
+                    if (this.Estado == 'P')
+                    {
+                        this.Estado = 'D';
+                    }
+                    else
+                    {
+                        this.Estado = 'P';
+                    }
+                    Console.WriteLine("Estado del libro cambiado a " + this.Estado);
+                    break;
+                case 'n':
+                    Console.WriteLine("El estado del libro permanece como " + this.Estado);
+                    break;
+            }   
         }
 
-        public void llenarListaDeAutores()
+        public void LlenarListaDeAutores()
         {
             ListaAutores.Clear();
             FileStream Archivo;
@@ -88,7 +113,7 @@ namespace _16_09_24_biblioteca
             leer = new StreamReader(Archivo);
 
             while (leer.EndOfStream == false)
-            {// Falta cambiar id autor y genero a strings
+            {
                 string cadena = leer.ReadLine(); string[] datos = cadena.Split(';');
                 Autor autor = new Autor(int.Parse(datos[0]), datos[1], datos[2]);
                 ListaAutores.Add(autor);
@@ -109,10 +134,39 @@ namespace _16_09_24_biblioteca
             return "";
         }
 
-    //Falta llamar a genero y autor, llenar listas y cambiar la muestra en MostrarLibro
-    public void MostrarLibro()
+        public void LlenarListaDeGeneros()
         {
-            Console.WriteLine($"Id: {this.Id_libro} | Titulo: {this.Titulo} | Id del género: {this.Id_genero} | Autor: {this.NombreAutor()} | Año de publicación: {this._id_autor} | Ubicacion: {this.Ubicacion} | Estado: {this.Estado}");
+            ListaGeneros.Clear();
+            FileStream Archivo;
+            StreamReader leer;
+            Archivo = new FileStream("generos.txt", FileMode.Open);
+            leer = new StreamReader(Archivo);
+
+            while (leer.EndOfStream == false)
+            {
+                string cadena = leer.ReadLine(); string[] datos = cadena.Split(';');
+                Genero genero = new Genero(int.Parse(datos[0]), datos[1]);
+                ListaGeneros.Add(genero);
+            }
+            leer.Close();
+            Archivo.Close();
+        }
+
+        public string NombreGenero()
+        {
+            foreach (Genero genero in ListaGeneros)
+            {
+                if (genero.Id_Genero == this.Id_autor)
+                {
+                    return $"{genero.NombreGenero}";
+                }
+            }
+            return "";
+        }
+
+        public void MostrarLibro()
+        {
+            Console.WriteLine($"Id: {this.Id_libro} | Titulo: {this.Titulo} | Género: {this.NombreGenero()} | Autor: {this.NombreAutor()} | Año de publicación: {this.Anio} | Ubicacion: {this.Ubicacion} | Estado: {this.Estado}");
         }
     }
 }
