@@ -122,18 +122,6 @@ namespace _16_09_24_biblioteca
             Archivo.Close();
         }
 
-        public string NombreAutor()
-        {
-        foreach (Autor autor in ListaAutores)
-                {
-                if (autor.Id_autor == this.Id_autor)
-                {
-                    return $"{autor.Nombre} {autor.Apellido}";
-                }    
-            }
-            return "";
-        }
-
         public void LlenarListaDeGeneros()
         {
             ListaGeneros.Clear();
@@ -152,6 +140,18 @@ namespace _16_09_24_biblioteca
             Archivo.Close();
         }
 
+        public string NombreAutor()
+        {
+            foreach (Autor autor in ListaAutores)
+            {
+                if (autor.Id_autor == this.Id_autor)
+                {
+                    return $"{autor.Nombre} {autor.Apellido}";
+                }
+            }
+            return "";
+        }
+
         public string NombreGenero()
         {
             foreach (Genero genero in ListaGeneros)
@@ -164,9 +164,35 @@ namespace _16_09_24_biblioteca
             return "";
         }
 
-        public void MostrarLibro()
+        public void MostrarLibro(string caso)
         {
-            Console.WriteLine($"Id: {this.Id_libro} | Titulo: {this.Titulo} | Género: {this.NombreGenero()} | Autor: {this.NombreAutor()} | Año de publicación: {this.Anio} | Ubicacion: {this.Ubicacion} | Estado: {this.Estado}");
+            this.LlenarListaDeAutores();
+            this.LlenarListaDeGeneros();
+            this.NombreAutor();
+            this.NombreGenero();
+
+            switch (caso)
+            {
+                case "todos":
+                    Console.WriteLine($"Id: {this.Id_libro} | Titulo: {this.Titulo} | Género: {this.NombreGenero()} | Autor: {this.NombreAutor()} | Año de publicación: {this.Anio} | Ubicacion: {this.Ubicacion} | Estado: {this.Estado}");
+                    break;
+
+                case "prestados":
+                    Console.WriteLine($"Id: {this.Id_libro} | Titulo: {this.Titulo} | Género: {this.NombreGenero()} | Autor: {this.NombreAutor()} | Año de publicación: {this.Anio}");
+                    break;
+
+                case "titulos":
+                    Console.WriteLine($"El libro {this.Titulo} se encuentra disponible en: {this.Ubicacion}");
+                    break;
+
+                case "autores":
+                    Console.WriteLine($"El libro {this.Titulo}, Género: {this.NombreGenero()}, autor: {this.NombreAutor()}, Año de publicación: {this.Anio}, Estado: {this.Estado}, se encuentra en: {this.Ubicacion} ");
+                    break;
+
+                case "generos":
+                    Console.WriteLine($"El libro {this.Titulo}, autor: {this.NombreAutor()}, Año de publicación: {this.Anio}, Estado: {this.Estado}, se encuentra en: {this.Ubicacion} ");
+                    break;
+            }
         }
     }
 }
